@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_2" data-name="Слой 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168.29 152">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke-width: 5px;
+      }
+
+      .cls-2, .cls-4, .cls-3, .cls-5 {
+        stroke: #0e0000;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4, .cls-3 {
+        stroke-width: 6px;
+      }
+
+      .cls-4, .cls-5 {
+        fill: none;
+      }
+
+      .cls-5 {
+        stroke-width: 7px;
+      }
+    </style>
+  </defs>
+  <g id="_Слой_1-2" data-name="Слой 1">
+    <g>
+      <rect class="cls-1" x="8.38" y="3.5" width="20" height="145" rx="9" ry="9"/>
+      <rect class="cls-4" x="8.38" y="3.5" width="20" height="145" rx="9" ry="9"/>
+    </g>
+    <g>
+      <rect class="cls-1" x="73.9" y="3.5" width="20" height="145" rx="9" ry="9"/>
+      <rect class="cls-4" x="73.9" y="3.5" width="20" height="145" rx="9" ry="9"/>
+    </g>
+    <g>
+      <rect class="cls-1" x="139.41" y="3.5" width="20" height="145" rx="9" ry="9"/>
+      <rect class="cls-5" x="139.41" y="3.5" width="20" height="145" rx="9" ry="9"/>
+    </g>
+    <circle class="cls-2" cx="18.38" cy="38.45" r="15.88"/>
+    <circle class="cls-3" cx="83.9" cy="109.25" r="15.88"/>
+    <circle class="cls-3" cx="149.41" cy="38.45" r="15.88"/>
+  </g>
+</svg>

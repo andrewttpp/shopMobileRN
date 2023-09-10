@@ -1,0 +1,125 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link type="text/css" href="{% static 'css/cart.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'css/product.css' %}" rel="stylesheet"/>
+    <script defer src="{% static 'js/cart.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="cart-block">
+        <div class="title-cart">
+            <div class="title-cart-image">Фото</div>
+            <div class="title-cart-name-and-description">Название товара и его характеристики</div>
+            <div class="title-cart-price-for-one-piece">Цена (за 1 шт.)</div>
+            <div class="title-cart-quantity">Количество</div>
+            <div class="title-cart-total-cost">Итого</div>
+            <div class="title-cart-delete-product">Удалить</div>
+        </div>
+        {% for item in cart %}
+            <div id="{{ item.product.id }}" class="product"
+                    {% if not forloop.counter|divisibleby:"2" %}
+                 style="background-color: #efe8e8">
+                    {% else %}
+                        >
+                    {% endif %}
+
+            {% with product=item.product %}
+                <a class="product-image" href="{{ product.item_number.get_absolute_url }}">
+                    {% if product.get_photos %}
+                        {% for i in product.get_photos %}
+                            {% if forloop.first %}
+                                <img src="{{ i.image.url }}">
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <img src="{% static "images/photo_is_missing.png" %}">
+                    {% endif %}
+                </a>
+                <div class="product-specifications">
+                    <div class="product-name">
+                        {{ product.name }}
+                    </div>
+                    <div class="product-color">
+                        <span class="product-color-title">Цвет: </span>
+                        <span class="product-color-name">{{ product.color_modification.name }}</span>
+                    </div>
+                </div>
+
+                <div class="product-price">
+
+                    {% if product.get_promotion %}
+                        <div class="current-price">
+                            <div class="price">{{ product.get_promotion.new_price }}</div>
+                            <div class="currency">₽</div>
+                        </div>
+                        <div class="old-price">
+                            <div class="price">{{ product.price }}</div>
+                            <div class="currency">₽</div>
+                        </div>
+                    {% else %}
+                        <div class="current-price">
+                            <div class="price">{{ product.price }}</div>
+                            <div class="currency">₽</div>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <div class="block-quantity-current-product">
+                    {% if item.quantity == 1 %}
+                        <div class="button-minus-the-product locked">-</div>
+                    {% else %}
+                        <div class="button-minus-the-product">-</div>
+                    {% endif %}
+                    <input autocomplete="off" class="field-quantity-current-product" type="text"
+                           value="{{ item.quantity }}">
+                    <div class="button-plus-the-product">+</div>
+                </div>
+                <div class="total-price">
+                    <div class="price">{{ item.total_price }}</div>
+                    <div class="currency">₽</div>
+                </div>
+                <div class="delete-button">
+                    <img class="delete-img" title="Удалить товар" src="{% static 'images/x.svg' %}">
+                </div>
+            {% endwith %}
+            </div>
+
+        {% endfor %}
+        <div class="total-price-block">
+            <div class="total-block-informations">
+
+                <div class="other-parameters">
+                    <div class="total-quantity">
+                        <div class="title">Количество товаров:</div>
+                        <div class="quantity">{{ cart.total_quantity_products }}</div>
+                    </div>
+                    <div class="total-price-without-discount">
+                        <div class="title">Цена без скидки:</div>
+                        <div class="price">{{ cart.get_total_price_without_discount }}</div>
+                        <div class="currency">{{ currency }}</div>
+                    </div>
+                    <div class="total-price-discount">
+                        <div class="title">Cкидка:</div>
+                        <div class="discount"></div>
+                        <div class="currency">{{ currency }}</div>
+                    </div>
+                </div>
+                <div class="total-price-with-discount">
+                    <div class="total-price-with-discount-container">
+                        <div class="title">Итоговая цена</div>
+                        <div class="total">
+                            <div class="price">{{ cart.get_total_price_with_discount }}</div>
+                            <div class="currency">{{ currency }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="submit-create-order">
+                <div class="button" title="Сделать заказ">Заказать</div>
+            </div>
+        </div>
+        {% csrf_token %}
+    </div>
+{% endblock %}

@@ -1,0 +1,307 @@
+@font-face {
+    font-family: 'Mont';
+    src: local('Mont'),
+    url('../fonts/mont_extralightdemo.ttf');
+}
+
+html, body {
+    background-color: #f0f0f0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+header, footer {
+    background-color: rgb(42 41 41);
+}
+
+header {
+    min-height: 90px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.footer {
+    display: flex;
+    padding: 20px;
+    justify-content: space-around;
+}
+
+.logo-link {
+    height: 70px;
+    margin-left: 50px;
+}
+
+.logo {
+    height: 70px;
+    width: 115px;
+}
+
+.cart-image, .cart {
+    height: 40px;
+    width: 40px;
+}
+
+.cart-image {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(103%) contrast(103%);
+}
+
+.header-categories {
+    display: flex;
+    align-items: center;
+}
+
+.header-categories a, .login-to-account, .my-account {
+    font-family: "Lucida Sans Unicode", serif;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 50px;
+    font-weight: bold;
+}
+
+.header-categories a:hover, .login-to-account:hover, .my-account:hover {
+    color: #d2d2d2;
+}
+
+.search-block {
+    display: flex;
+    width: 100%;
+    background-color: white;
+    z-index: 2;
+    justify-content: center;
+    position: sticky;
+    top: 90px;
+    height: 0;
+    align-items: center;
+    gap: 10px;
+    font-family: "Lucida Sans Unicode", serif;
+    overflow: hidden;
+    transition: height 0.4s;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+    box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+}
+
+.search-field {
+    padding-left: 60px;
+}
+
+#site-search {
+    all: unset;
+}
+
+#site-search {
+    color: black;
+    padding: 3px;
+    height: 30px;
+    font-family: "Lucida Sans Unicode", monospace;
+    width: 500px;
+    flex: 1;
+    border-bottom: 2px solid grey;
+}
+
+#site-search:focus {
+    border-color: black;
+    transition: all 0.3s;
+}
+
+.search-result-articles {
+    display: none;
+    position: fixed;
+    background-color: white;
+    top: calc(90px + 60px - (60px - 38px) / 2);
+    padding: 10px;
+    border-radius: 0 0 5px 5px;
+    width: calc(500px - 20px + 6px);
+    text-align: center;
+    -webkit-box-shadow: 0 9px 8px 0 rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0 9px 8px 0 rgba(34, 60, 80, 0.2);
+    box-shadow: 0 9px 8px 0 rgba(34, 60, 80, 0.2);
+    justify-content: center;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.search-result-articles:not(:focus) {
+    display: none;
+}
+
+.found-item-number {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.found-item-number-image {
+    display: block;
+    height: 100px;
+}
+
+.found-item-number-image img {
+    width: 150px;
+    height: 100px;
+}
+
+.found-item-number-parameters-name {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 76px;
+    height: 38px;
+    background-color: rgb(2 107 215);
+    font-weight: bold;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+    box-shadow: 0 2px 8px 0 rgba(34, 60, 80, 0.2);
+}
+
+.search-button:hover {
+    cursor: pointer;
+}
+
+.right-menu-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.search-activate {
+    height: 35px;
+}
+
+.search-activate:hover {
+    cursor: pointer;
+}
+
+.search-activate-image {
+    width: 35px;
+    height: 35px;
+}
+
+.search-block .main-block {
+    display: flex;
+    gap: 10px;
+    width: calc(100% - 60px);
+    justify-content: center;
+}
+
+.hide-search-block {
+    width: 60px;
+}
+
+.hide-img {
+    width: 30px;
+    cursor: pointer;
+}
+
+.cart {
+    position: relative;
+}
+
+.count-elements {
+    position: absolute;
+    text-decoration: none;
+    color: white;
+    width: 25px;
+    height: 25px;
+    background-color: #e9550f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    top: 25px;
+    left: 25px;
+    font-family: "Lucida Sans Unicode", serif;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+
+/*                  FOOTER                */
+.information {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-family: "Lucida Sans Unicode", serif;
+    color: white;
+    justify-content: space-around;
+    font-size: 18px;
+}
+
+.footer-categories {
+    display: grid;
+    gap: 20px;
+    font-size: 0.9vw;
+}
+
+.footer-category, footer .title {
+    font-family: "Lucida Sans Unicode", serif;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+}
+
+footer .title {
+    font-family: "Lucida Sans Unicode", serif;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.media {
+    display: inline-block;
+}
+
+.media-icons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.media .telegram-icon img {
+    height: 25px;
+    width: 28px;
+}
+
+.media .vk-icon img {
+    height: 25px;
+    width: 40px;
+    margin-left: 20px;
+}
+
+@media only screen and (max-width: 1450px) {
+    .header-categories a, .my-account {
+        font-size: 20px;
+    }
+}
+

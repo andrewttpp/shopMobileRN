@@ -1,0 +1,126 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <script defer src="{% static 'js/product.js' %}"></script>
+    <link type="text/css" href="{% static 'css/product.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'css/choices.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="products-container">
+        <div class="photo">
+            <img class="main-product-photo">
+            <div class="photos-carousel">
+                <div class="prev-button-carousel">
+                    <div id="prev-slide"></div>
+                </div>
+
+                <div class="photos-container">
+                    {% for product in item_number.get_products %}
+                        {% if forloop.first %}
+                            {% for photo in product.get_photos %}
+                                {% if forloop.first %}
+                                    <img data-value="{{ photo.product.id }}" class="product-photo is-open"
+                                         src="{{ photo.image.url }}">
+                                {% else %}
+                                    <img data-value="{{ photo.product.id }}" class="product-photo"
+                                         src="{{ photo.image.url }}">
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for photo in product.get_photos %}
+                                <img data-value="{{ photo.product.id }}" class="product-photo"
+                                     src="{{ photo.image.url }}">
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="next-button-carousel">
+                    <div id="next-slide"></div>
+                </div>
+            </div>
+        </div>
+        <div class="right-menu-product">
+            <div class="title-product">
+                {{ item_number.name }}
+            </div>
+            <div class="title-manufacturer">
+                <div class="title">Производитель:</div>
+                <a href="{{ item_number.manufacturer.get_absolute_url }}"
+                   class="name-manufacturer">{{ item_number.manufacturer }}</a>
+            </div>
+            <div id="parameters">
+                <div class="title-color">
+                    <div class="title">Цвет:</div>
+                    <div class="current-color">
+                        {% for color in item_number.get_products %}
+                            {% if forloop.counter == 1 %}
+                                {{ color.color_modification.name }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="colors">
+                    {% for product in item_number.get_products %}
+                        {% if product.on_sale %}
+                            <div
+                                    {% if forloop.counter == 1 %}
+                                        class="color checked"
+                                    {% else %}
+                                        class="color"
+                                    {% endif %}
+                                        product-id="{{ product.id }}"
+
+                                    {% if product.get_promotion %}
+                                        product-price="{{ product.get_promotion.first.new_price }}"
+                                        product-old-price="{{ product.price }}"
+                                    {% else %}
+                                        product-price="{{ product.price }}"
+                                    {% endif %}
+                                        product-currency="{{ currency }}"
+                                        style="background-color: {{ product.color_modification.hex_code_color }}"
+                                        title="{{ product.color_modification.name }}">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="price-block">
+                <div class="title">Цена:</div>
+                <div class="product-price">
+                    {% if item_number.get_products.first.get_promotion %}
+                        <div class="current-product-price">{{ item_number.get_products.first.get_promotion.first.new_price }}
+                            ₽
+                        </div>
+                        <div class="old-product-price">{{ item_number.get_products.first.price }} {{ currency }}</div>
+                    {% else %}
+                        <div class="current-product-price">{{ item_number.get_products.first.price }} {{ currency }}</div>
+                        <div class="old-product-price" style="display: none"></div>
+                    {% endif %}
+                </div>
+            </div>
+            {% csrf_token %}
+            <div class="block-add-to-cart">
+                <div class="title-block">Количество товаров:</div>
+                <div class="block-quantity-current-product">
+                    <div class="button-minus-the-product locked">-</div>
+                    <input autocomplete="off" class="field-quantity-current-product" type="text" value="1">
+                    <div class="button-plus-the-product">+</div>
+                </div>
+                <div class="add-to-cart">
+                    <a class="title">Добавить в корзину</a>
+                    <div class="load"></div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-menu">
+            <div class="title-description">
+                <div class="title">Описание товара:</div>
+                <div class="description">{{ item_number.description|linebreaksbr }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,239 @@
+.cart-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    justify-content: flex-start;
+    margin: 7.05% 10%;
+    background-color: white;
+    font-family: "Lucida Sans Unicode", serif;
+    border: 2px solid rgba(42, 41, 41, 0.15);
+    border-radius: 20px;
+}
+
+.title-cart {
+    height: 50px;
+    align-items: center;
+    font-weight: bold;
+}
+
+.title-cart, .product, .product-image, .block-quantity-current-product,
+.product-specifications, .product-price, .current-price, .old-price,
+.total-price, .title-cart div, .delete-button {
+    display: flex;
+}
+
+.title-cart, .product {
+    width: 100%;
+}
+
+.title-cart div, .product, .product-image, .product-specifications,
+.total-price, .delete-button, .block-quantity-current-product {
+    justify-content: center;
+}
+
+.title-cart-image, .product-image {
+    margin-left: 10px;
+    width: 15%;
+}
+
+.title-cart-name-and-description, .product-specifications {
+    width: 50%;
+}
+
+.title-cart-price-for-one-piece, .title-cart-quantity,
+.block-quantity-current-product, .product-price {
+    width: 10%;
+}
+
+.product-price {
+    justify-content: center;
+}
+
+.title-cart-delete-product, .delete-button {
+    width: 5%;
+    margin-right: 10px;
+}
+
+
+.product {
+    height: 150px;
+    overflow: hidden;
+    transition: height 0.4s;
+}
+
+.product-image {
+    align-items: center;
+    cursor: auto;
+}
+
+.product-image img {
+    width: 150px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.product-image img {
+    border-radius: 10px;
+}
+
+.block-quantity-current-product {
+    flex-direction: row;
+}
+
+.product div {
+    align-items: center;
+}
+
+.title-cart-name-and-description {
+    justify-content: start !important;
+}
+
+.product-specifications {
+    flex-direction: column;
+    align-items: start !important;
+    gap: 10px;
+}
+
+.product-name {
+    font-weight: bold;
+}
+
+.product-color {
+    gap: 5px;
+}
+
+.product-color-name {
+    font-weight: bold;
+}
+
+.current-price, .old-price, .total-price {
+    gap: 5px;
+}
+
+.old-price {
+    font-size: 14px;
+    color: grey;
+    padding-bottom: 10px;
+    text-decoration: line-through;
+}
+
+.total-price, .title-cart-total-cost {
+    width: 200px;
+}
+
+@media screen {
+
+}
+
+.delete-img {
+    width: 30px;
+}
+
+.delete-img:hover {
+    cursor: pointer;
+}
+
+.field-quantity-current-product {
+    height: 34px !important;
+}
+
+.field-quantity-current-product:focus {
+    outline: none;
+}
+
+.button-minus-the-product, .button-plus-the-product {
+    height: 40px;
+}
+
+.no-products-found {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-family: "Lucida Sans Unicode", serif;
+    color: grey;
+    font-weight: bold;
+}
+
+.total-price-block {
+    display: flex;
+    align-items: center;
+    height: 150px;
+    width: 100%;
+    font-weight: bold;
+    border-top: 2px solid rgba(42, 41, 41, 0.15);
+}
+
+.other-parameters {
+    display: flex;
+    gap: 10px;
+    padding: 30px;
+    flex-direction: column;
+    width: 50%;
+}
+
+.other-parameters div {
+    display: flex;
+    gap: 5px;
+    color: grey;
+    font-size: 15px;
+}
+
+.total-price-discount div {
+    color: #07c207;
+}
+
+.total-price-with-discount {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    width: 100%;
+    justify-content: center;
+}
+
+.total-price-with-discount-container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.total-price-with-discount .total {
+    display: flex;
+    gap: 5px;
+}
+
+.total-block-informations {
+    display: flex;
+    width: 85%;
+}
+
+.submit-create-order {
+    width: 15%;
+    display: flex;
+    justify-content: center;
+}
+
+.submit-create-order .button {
+    background-color: rgba(42, 41, 41);
+    color: white;
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.submit-create-order .button:hover {
+    cursor: pointer;
+    color: #d2d2d2;
+}
+
+.submit-create-order .non-active {
+    background-color: #7e7d7d;
+}
+
+.submit-create-order .non-active:hover {
+    color: white;
+}

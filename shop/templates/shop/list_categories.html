@@ -1,0 +1,17 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link type="text/css" href="{% static 'css/list_categories.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="all-categories">
+        {% for i in categories %}
+            <a href="{{ i.get_absolute_url }}" class="category">
+                <img src="{{ i.image.url }}">
+                <span class="title">{{ i.name }}</span>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

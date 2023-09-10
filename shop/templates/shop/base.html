@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script defer src="{% static 'js/jquery-3.6.4.js' %}"></script>
+    <script defer src="{% static 'js/base.js' %}"></script>
+    <link type="text/css" href="{% static 'css/base.css' %}" rel="stylesheet"/>
+    {% block styles %}
+    {% endblock %}
+    <title>{{ title }}</title>
+</head>
+<body>
+<wrapper class="wrapper">
+    <header class="header">
+        <div class="header-categories">
+            <a href="{% url 'main' %}" class="logo-link"><img class="logo" src="{% static 'images/logo.png' %}"></a>
+            {% for i in header_menu %}
+                <a href="{% url i.url_name %}" class="header-category"><span>{{ i.title }}</span></a>
+            {% endfor %}
+        </div>
+        <div class="right-menu-header">
+            <div class="search-activate">
+                <img class="search-activate-image" src="{% static 'images/search.svg' %}">
+            </div>
+            <a href="{% url 'cart' %}" class="cart">
+                <img class="cart-image" src="{% static 'images/cart.svg' %}">
+                <div class="count-elements"></div>
+            </a>
+            {% if not request.user.is_authenticated %}
+                <a href="#" class="login-to-account"><span>Войти</span></a>
+            {% else %}
+                <a href="#" class="my-account"><span>Мой профиль</span></a>
+            {% endif %}
+        </div>
+    </header>
+    <div class="main">
+        <div class="search-block">
+            <div class="main-block">
+                <div class="search-field"><input type="text" id="site-search" placeholder='Стенка "Макси"' name="search" maxlength="60">
+                    <div class="search-result-articles"></div>
+                </div>
+                <div class="search-button">Найти</div>
+            </div>
+            <div class="hide-search-block">
+                <img class="hide-img" src="{% static 'images/x.svg' %}">
+            </div>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer class="footer">
+        <div class="information">
+            <span>ИП Петрова П.П.; ОГРН:000000000000000</span>
+            <span>10.00-20.00 - +447786205094</span>
+            <span>mebel-market.com © {{ current_year }}</span>
+        </div>
+        <div class="footer-categories">
+            <span class="title">Покупателям</span>
+            {% for i in footer_menu_for_users %}
+                <a href="{{ i.url_name }}" class="footer-category"><span>{{ i.title }}</span></a>
+            {% endfor %}
+        </div>
+        <div class="footer-categories">
+            <span class="title">Компания</span>
+            {% for i in footer_menu_about_company %}
+                <a href="{{ i.url_name }}" class="footer-category"><span>{{ i.title }}</span></a>
+            {% endfor %}
+        </div>
+        <div class="media">
+            <span class="title">Мы в социальных сетях</span>
+            <div class="media-icons">
+                <a href="https://t.me/mebelnavibor" class="telegram-icon">
+                    <img src="{% static 'images/telegram_icon.png' %}">
+                </a>
+                <a href="https://vk.com/mebel.v.kontakte" class="vk-icon">
+                    <img src="{% static 'images/vk_icon.png' %}">
+                </a>
+            </div>
+        </div>
+
+    </footer>
+</wrapper>
+</body>
+</html>
+

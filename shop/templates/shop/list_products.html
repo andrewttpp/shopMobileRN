@@ -1,0 +1,123 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+
+{% block styles %}
+    <script defer type="text/javascript" src="{% static 'js/list_products.js' %}"></script>
+    <link type="text/css" href="{% static 'css/list_products.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="header-filters">
+        <div class="container-header-filters">
+            <div class="wrapper-header-filters">
+                <div class="title-header-filters">
+                    <div class="path-site">
+                        <a href="{% url 'categories' %}" class="prev-page">Категории</a>
+                        <span class="arrow"></span>
+                        <div class="title">{{ title }}</div>
+                    </div>
+                    <div class="title-page">{{ title }}</div>
+                </div>
+                <div class="number-of-products">
+                    <div class="number-of-products-found">{{ verbose_name_plural_title }} {{ number_of_products_found }} {{ verbose_name_plural_products }}</div>
+                </div>
+            </div>
+            <div class="button-open-filter">
+                <img id="parameters-img" src="{% static 'images/parametrs.svg' %} ">
+            </div>
+        </div>
+    </div>
+    <div class="filters-main">
+        <div class="filters-wrapper">
+            <div class="filters-container">
+                <div class="filters-sorting">
+                    <span class="title">Сортировка:</span>
+                    <div class="radiobuttons">
+                        <div class="radiobutton">
+                            <input type="radio" name="sorting" id="default-sorting" data-value="default" checked>
+                            <label for="default-sorting">По умолчанию</label>
+                        </div>
+                        <div class="radiobutton">
+                            <input type="radio" name="sorting" id="cheaper-sorting" data-value="cheaper">
+                            <label for="cheaper-sorting">Дешевле</label>
+                        </div>
+                        <div class="radiobutton">
+                            <input type="radio" name="sorting" id="expensive-sorting" data-value="expensive">
+                            <label for="expensive-sorting">Дороже</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="price-sorting">
+                    <span class="title">Цена:</span>
+                    <div class="price-filter-block">
+                        <input id="initial-price" placeholder="Цена от 0 {{ currency }}">
+                        <input id="final-price" placeholder="до {{ currency }}">
+                    </div>
+                </div>
+            </div>
+            <div class="button-submit">Применить фильтры</div>
+        </div>
+    </div>
+
+    <div class="products-container">
+        {% for item_number in item_numbers %}
+            {% if item_number.get_products %}
+                <div class="product">
+                    <div class="photos">
+                        {% for product in item_number.get_products %}
+                            <a class="photo" id="{{ product.id }}"
+                               href="{{ item_number.get_absolute_url }}">
+                                <img class="product-img" src="{{ product.get_photos.first.image.url }}">
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ item_number.get_absolute_url }}" class="product-title">{{ item_number.name }}</a>
+                    <div class="colors">
+                        {% for product in item_number.get_products %}
+                            {% if product.on_sale %}
+                                <div
+                                        {% if forloop.counter == 1 %}
+                                            class="color checked"
+                                        {% else %}
+                                            class="color"
+                                        {% endif %}
+                                            product-id="{{ product.id }}"
+
+                                        {% if product.get_promotion %}
+                                            product-price="{{ product.get_promotion.first.new_price }}"
+                                            product-old-price="{{ product.price }}"
+                                        {% else %}
+                                            product-price="{{ product.price }}"
+                                        {% endif %}
+                                            product-currency="{{ currency }}"
+                                            style="background-color: {{ product.color_modification.hex_code_color }}"
+                                            title="{{ product.color_modification.name }}">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <a href="{{ item_number.manufacturer.get_absolute_url }}"
+                       class="product-manufacturer">{{ item_number.manufacturer }}</a>
+                    <div class="product-price">
+                        {% if item_number.get_products.first.get_promotion %}
+                            <div class="current-product-price">{{ item_number.get_products.first.get_promotion.first.new_price }}
+                                ₽
+                            </div>
+                            <div class="old-product-price">{{ item_number.get_products.first.price }} {{ currency }}</div>
+                        {% else %}
+                            <div class="current-product-price">{{ item_number.get_products.first.price }} {{ currency }}</div>
+                            <div class="old-product-price" style="display: none"></div>
+                        {% endif %}
+                    </div>
+
+                    <div class="add-to-cart">
+                        <a class="title">Добавить в корзину</a>
+                        <div class="load"></div>
+                    </div>
+                    {% csrf_token %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

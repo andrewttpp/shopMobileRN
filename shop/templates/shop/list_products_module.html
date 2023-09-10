@@ -1,0 +1,40 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+
+{% block styles %}
+    <link type="text/css" href="{% static 'css/list_products.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="products-container">
+        {% for i in products %}
+            {% if i.get_modifications %}
+                <div class="product">
+                    {% if not i.get_photos %}
+                        <a class="photo" href="">
+                            <img class="product-img" src="{% static 'images/photo_is_missing.png' %}">
+                        </a>
+                    {% else %}
+                        {% for j in i.get_photos %}
+                            {% if forloop.first %}
+                                <a class="photo" href="{{ i.get_absolute_url }}">
+                                    <img class="product-img" src="{{ j.image.url }}">
+                                    {% if i.quantity_in_stock != 0 %}
+                                        <span class="product-quantity-in-stock-true">Есть в наличии</span>
+                                    {% else %}
+                                        <span class="product-quantity-in-stock-false">Нет в наличии</span>
+                                    {% endif %}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <a href="{{ i.get_absolute_url }}" class="product-title">{{ i.name }}</a>
+                    <a href="{{ i.manufacturer.get_absolute_url }}" class="product-manufacturer">{{ i.manufacturer }}</a>
+                    <div class="product-currency">{{ i.get_minimal_modifications.currency }} ₽</div>
+                    <div class="button-add-to-basket">Добавить в корзину</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

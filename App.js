@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {MainPage} from './components/pages/MainPage'
+import {CategoriesPage} from "./components/pages/CategoriesPage";
+import {ProfilePage} from "./components/pages/ProfilePage";
+
+const Stack = createNativeStackNavigator();
+export const API_MAIN_URL = "https://8fe2-46-172-35-239.ngrok-free.app/api"
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerShown: false
+                }}
+            >
+                <Stack.Screen
+                    name="Главная страница"
+                    component={MainPage}
+                />
+                <Stack.Screen
+                    name="Категории"
+                    component={CategoriesPage}
+                />
+                <Stack.Screen
+                    name="Профиль"
+                    component={ProfilePage}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

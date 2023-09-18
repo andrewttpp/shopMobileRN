@@ -1,7 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView
-from rest_framework.generics import ListCreateAPIView
+from rest_framework import status
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .cart import Cart
 from .models import *
@@ -26,9 +29,28 @@ class SearchItemNumbersAPIList(ListCreateAPIView):
 
 class CategoriesApiView(ListCreateAPIView):
     serializer_class = CategorySerializer
+
     def get_queryset(self):
         queryset = Category.objects.all()
         return queryset
+
+
+class CategoryApiView(ListCreateAPIView):
+    serializer_class = ItemNumberSerializer
+
+    def get_queryset(self):
+        queryset = ItemNumber.objects.filter(category__id=self.kwargs['category_id'])
+        return queryset
+
+
+class ItemNumberApiView(APIView):
+    serializer_class = ItemNumberSerializer
+
+    def get(self, request, product_id):
+        queryset = get_object_or_404(ItemNumber, pk=product_id)
+
+        return Response(data=self.serializer_class(queryset).data, status=status.HTTP_200_OK)
+
 
 def cart_add(request, product_id):
     if request.method == "POST" and is_ajax(request):
@@ -140,7 +162,8 @@ class CategoryView(DataMixin, ListView):
             for i in query:
                 if not int(self.request.GET.get('initial_price')) <= i.get_min_price() <= \
                        int(self.request.GET.get('final_price')) or \
-                   not int(self.request.GET.get('initial_price')) <= i.price <= int(self.request.GET.get('final_price')):
+                        not int(self.request.GET.get('initial_price')) <= i.price <= int(
+                            self.request.GET.get('final_price')):
                     query = query.exclude(item_number=i.item_number)
             if self.request.GET.get('sorting') == 'cheaper':
                 query = query.order_by('price')

@@ -20,11 +20,11 @@ DEBUG = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ALLOWED_HOSTS = ['8fe2-46-172-35-239.ngrok-free.app']
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:19006",
-    "https://8fe2-46-172-35-239.ngrok-free.app"
+    "https://1da8-46-172-28-185.ngrok-free.app"
 ]
 
 INSTALLED_APPS = [
@@ -76,7 +76,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'shop_db',
-        'USER': 'postgres',
+        'USER': 'andrewsapognikov',
         'PASSWORD': 'PT?qGNGa~dZBVczE{G|a4MsH?2AobVAN',
         'HOST': 'localhost',
         'PORT': '5432',

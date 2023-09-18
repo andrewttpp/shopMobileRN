@@ -1,45 +1,41 @@
-import {Image, Text, SafeAreaView, View, ScrollView} from "react-native";
+import {Image, Text, SafeAreaView, View, ScrollView, TouchableOpacity} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {FooterMenu} from "../FooterMenu";
 import {HeaderMenu} from "../HeaderMenu";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {API_MAIN_URL} from '../../App.js'
+import {useNavigation} from "@react-navigation/native";
+import {API_CATEGORIES} from "../http/api";
 
 
 export const CategoriesPage = (props) => {
     const [categories, setCategories] = useState([])
+    const navigation = useNavigation();
 
     const getCategories = () => {
         axios({
             method: 'get',
-            headers: {
-                'ngrok-skip-browser-warning': '69420'
-            },
-
-            url: `${API_MAIN_URL}/categories/`,
+            url: API_CATEGORIES,
         }).then((response) => {
             setCategories(response.data)
-        });
+        }).catch(error => console.log(error));
     }
 
     useEffect(() => {
         getCategories();
     }, []);
     return (
-        <SafeAreaView style={{
-            padding: 32,
+        <View style={{
             display: 'flex',
             alignItems: 'center',
             height: '100%',
             width: '100%',
             position: 'relative',
-            backgroundColor: "white",
         }}>
             <HeaderMenu title='Категории'/>
             <ScrollView contentContainerStyle={{
                 rowGap: 16,
-                paddingTop: 80,
+                paddingTop: 120,
                 paddingBottom: 70,
                 alignItems: 'center',
             }} style={{
@@ -50,10 +46,13 @@ export const CategoriesPage = (props) => {
 
                 {categories.map((category) => {
                     return (
-                        <View key={category.id} style={{
+                        <TouchableOpacity key={category.id}  style={{
                             position: 'relative',
-                        }}>
-                            <Image source={category.image} style={{
+                        }} onPress={() => navigation.navigate('Товары', {
+                            category_id: category.id,
+                            title: category.name,
+                        })} >
+                            <Image source={{uri: `${category.image}`}} style={{
                                 width: 288,
                                 height: 162,
                                 borderRadius: 12,
@@ -67,14 +66,16 @@ export const CategoriesPage = (props) => {
                                 top: 5,
                                 left: 5
                             }}>
-                                <Text>{category.name}</Text>
+                                <Text style={{
+                                    fontWeight: 600
+                                }}>{category.name}</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     )
                 })}
             </ScrollView>
             <FooterMenu page='categories'/>
             <StatusBar style="auto"/>
-        </SafeAreaView>
+        </View>
     )
 }

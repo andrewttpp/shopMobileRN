@@ -3,7 +3,7 @@ import {Text, View} from "react-native";
 export const HeaderMenu = (props) => {
     return (
         <View style={{
-            top: 30,
+            paddingTop: 40,
             position: 'absolute',
             borderBottomWidth: 1,
             borderColor: '#d8d8d8',

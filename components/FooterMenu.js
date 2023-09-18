@@ -1,11 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import imageMainFooter from "../static/images/context/house.png";
-import imageMainClickFooter from "../static/images/context/house_click.png";
-import imageCategoriesFooter from "../static/images/context/blocks.png";
-import imageCategoriesClickFooter from "../static/images/context/blocks_click.png";
-import imageProfileFooter from "../static/images/context/user.png";
-import imageProfileClickFooter from "../static/images/context/user_click.png";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import {AntDesign, Feather, MaterialIcons} from "@expo/vector-icons";
 
 export const FooterMenu = (props) => {
     const navigation = useNavigation();
@@ -13,28 +8,19 @@ export const FooterMenu = (props) => {
     return (
         <View style={stylesFooterMenu.container}>
             <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Главная страница')}>
-                <Image source={props.page === 'main' ? imageMainClickFooter:imageMainFooter} style={{
-                    width: 25,
-                    height: 25,
-                }}/>
+                <AntDesign name="home" size={24} color={props.page === 'main' ? '#1C1C1C':'#CCCCCC'} />
                 <Text style={{
                     color: props.page === 'main' ? '#1C1C1C':'#CCCCCC'
                 }}>Главная</Text>
             </TouchableOpacity>
             <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Категории')}>
-                <Image source={props.page === 'categories' ? imageCategoriesClickFooter:imageCategoriesFooter} style={{
-                    width: 25,
-                    height: 25,
-                }}/>
+                <MaterialIcons name="category" size={24} color={props.page === 'categories' ? '#1C1C1C':'#CCCCCC'} />
                 <Text style={{
                     color: props.page === 'categories' ? '#1C1C1C':'#CCCCCC'
                 }}>Категории</Text>
             </TouchableOpacity>
             <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Профиль')}>
-                <Image source={props.page === 'profile' ? imageProfileClickFooter:imageProfileFooter} style={{
-                    width: 25,
-                    height: 25,
-                }}/>
+                <Feather name="user" size={24} color={props.page === 'profile' ? '#1C1C1C':'#CCCCCC'} />
                 <Text style={{
                     color: props.page === 'profile' ? '#1C1C1C':'#CCCCCC'
                 }}>Профиль</Text>
@@ -50,10 +36,12 @@ const stylesFooterMenu = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         position: 'absolute',
-        padding: 10,
+        paddingTop: 10,
         borderTopWidth: 1,
         borderColor: '#d8d8d8',
         bottom: 0,
+        paddingLeft: 24,
+        paddingRight: 24,
         paddingBottom: 24,
         backgroundColor: 'white',
     },

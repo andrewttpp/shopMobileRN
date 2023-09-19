@@ -1,12 +1,19 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView
-from rest_framework.generics import ListCreateAPIView
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .cart import Cart
+from .likes import Likes
 from .models import *
 from .utils import DataMixin
-from .serializers import ItemNumberSerializer, CategorySerializer
+from .serializers import ProductSerializer, CategorySerializer
 
 
 def is_ajax(request):
@@ -17,65 +24,106 @@ def is_ajax(request):
 
 
 class SearchItemNumbersAPIList(ListCreateAPIView):
-    serializer_class = ItemNumberSerializer
+    serializer_class = ProductSerializer
 
     def get_queryset(self):
-        queryset = ItemNumber.objects.filter(name__icontains=self.request.GET.get('search_content'))
+        queryset = Products.objects.filter(name__icontains=self.request.GET.get('search_content'))
         return queryset
 
 
 class CategoriesApiView(ListCreateAPIView):
     serializer_class = CategorySerializer
+
     def get_queryset(self):
         queryset = Category.objects.all()
         return queryset
 
+
+class CategoryApiView(ListCreateAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        queryset = Products.objects.filter(item_number__category__id=self.kwargs['category_id'])
+        return queryset
+
+
+class ProductApiView(APIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, product_id):
+        queryset = get_object_or_404(Products, pk=product_id)
+
+        return Response(data=self.serializer_class(queryset).data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def like_add(request, product_id):
+    likes = Likes(request)
+    likes.add(product_id)
+    return Response(data={'message': 'OK'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def like_remove(request, product_id):
+    likes = Likes(request)
+    likes.remove(product_id)
+    return Response(data={'message': 'OK'}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def is_liked(request, product_id):
+    likes = Likes(request)
+    result_is_liked = likes.is_liked(product_id)
+    return Response(data={'message': 'OK', 'is_liked': result_is_liked}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_liked(request):
+    likes = Likes(request)
+    products = Products.objects.filter(pk__in=likes.likes)
+
+    return Response(data={'message': 'OK', 'liked': ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
 def cart_add(request, product_id):
-    if request.method == "POST" and is_ajax(request):
-        cart = Cart(request)
-        cart.add(product=product_id,
-                 quantity=request.POST.get('quantity'),
-                 price=request.POST.get('price'))
-        return JsonResponse(
-            {
-                "total_price_without_discount": cart.get_total_price_without_discount(),
-                "total_price_with_discount": cart.get_total_price_with_discount(),
-                "total_quantity_products": cart.total_quantity_products()
-            },
-            status=200)
-    return render(request, 'shop/base.html')
-
-
-def cart_len(request):
     cart = Cart(request)
-    if request.method == 'GET' and is_ajax(request):
-        return JsonResponse({"count_products": cart.__len__()})
-
-
-def cart_remove(request, product_id):
-    if request.method == "POST" and is_ajax(request):
-        cart = Cart(request)
-        product = get_object_or_404(Products, id=product_id)
-        cart.remove(product)
-        return JsonResponse({
+    data = json.loads(request.body)
+    cart.add(product=product_id,
+             quantity=data['quantity'],
+             price=data['price'])
+    return JsonResponse(
+        {
             "total_price_without_discount": cart.get_total_price_without_discount(),
             "total_price_with_discount": cart.get_total_price_with_discount(),
             "total_quantity_products": cart.total_quantity_products()
-        }, status=200)
+        },
+        status=200)
 
 
-def cart_view(request):
+@api_view(['GET'])
+def cart_len(request):
     cart = Cart(request)
-    context_data = DataMixin.get_user_context(self=request) | {'cart': cart, 'title': 'Корзина'}
-    return render(request, 'shop/cart.html', context_data)
+    return JsonResponse({"count_products": cart.__len__()})
 
 
-def check_product_in_cart(request, product_id):
+@api_view(['POST'])
+def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Products, id=product_id)
-    if request.method == 'GET' and is_ajax(request):
-        return JsonResponse({'product_in_the_cart': cart.check_product_in_cart(product)})
-    return render(request, 'shop/cart.html')
+    cart.remove(product)
+    return JsonResponse({
+        "total_price_without_discount": cart.get_total_price_without_discount(),
+        "total_price_with_discount": cart.get_total_price_with_discount(),
+        "total_quantity_products": cart.total_quantity_products()
+    }, status=200)
+
+
+@api_view(['GET'])
+def check_in_cart(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Products, id=product_id)
+    return JsonResponse({'in_cart': cart.check_product_in_cart(product)})
 
 
 "Page View"
@@ -140,7 +188,8 @@ class CategoryView(DataMixin, ListView):
             for i in query:
                 if not int(self.request.GET.get('initial_price')) <= i.get_min_price() <= \
                        int(self.request.GET.get('final_price')) or \
-                   not int(self.request.GET.get('initial_price')) <= i.price <= int(self.request.GET.get('final_price')):
+                        not int(self.request.GET.get('initial_price')) <= i.price <= int(
+                            self.request.GET.get('final_price')):
                     query = query.exclude(item_number=i.item_number)
             if self.request.GET.get('sorting') == 'cheaper':
                 query = query.order_by('price')

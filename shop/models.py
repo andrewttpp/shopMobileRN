@@ -9,6 +9,7 @@ from django.core.files.storage import FileSystemStorage
 
 import unidecode
 from uuid import uuid4
+import datetime
 
 
 class UUIDFileStorage(FileSystemStorage):
@@ -24,7 +25,7 @@ class ItemNumber(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name='Категория артикула')
     manufacturer = models.ForeignKey('Manufacturer', on_delete=models.CASCADE, verbose_name='Производитель')
     description = models.TextField(max_length=2000, verbose_name='Общее описание артикула', blank=True, null=True)
-    size = models.CharField(verbose_name='Размер товара данного артикула')
+    size = models.CharField(max_length=128, verbose_name='Размер товара данного артикула')
     price = models.IntegerField(verbose_name='Цена товара данного артикула')
     assembly_price = models.IntegerField(default=500, verbose_name='Цена сборки')
     the_price_of_lifting_to_each_floor = models.IntegerField(default=200, verbose_name='Цена подъёма за каждый этаж')
@@ -94,7 +95,7 @@ class Products(models.Model):
     color_modification = models.ForeignKey('ProductColors', on_delete=models.CASCADE, verbose_name='Цвет продукта')
     module = models.ForeignKey('Modules', on_delete=models.CASCADE, blank=True, null=True, verbose_name='Модуль товара')
     description = models.TextField(max_length=2000, verbose_name='Описание данного товара', blank=True, null=True)
-    size = models.CharField(verbose_name='Размер товара', blank=True, null=True)
+    size = models.CharField(max_length=128, verbose_name='Размер товара', blank=True, null=True)
     price = models.IntegerField(verbose_name='Цена товара', blank=True, null=True)
     quantity_in_stock = models.IntegerField(default=1, verbose_name='Количество в наличии')
     assembly_price = models.IntegerField(verbose_name='Цена сборки', blank=True, null=True)
@@ -346,3 +347,9 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+# class Likes(models.Model):
+#     user = models.ForeignKey('User', models.CASCADE, verbose_name='Пользователь', related_name='user_like')
+#     product = models.ForeignKey('User', models.CASCADE, verbose_name='Пользователь', related_name='product_like')
+#     date = models.DateTimeField(default=datetime.datetime.now())

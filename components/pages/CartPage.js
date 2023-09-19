@@ -1,12 +1,9 @@
 import {View} from "react-native";
-import {StatusBar} from "expo-status-bar";
 import {FooterMenu} from "../FooterMenu";
+import {StatusBar} from "expo-status-bar";
 import {HeaderMenu} from "../HeaderMenu";
-import {useNavigation} from "@react-navigation/native";
 
-export const MainPage = (props) => {
-    const navigation = useNavigation();
-
+export const CartPage = (props) => {
     return (
         <View style={{
             display: 'flex',
@@ -15,8 +12,8 @@ export const MainPage = (props) => {
             width: '100%',
             position: 'relative',
         }}>
-            <HeaderMenu back={false} title='Главная'/>
-            <FooterMenu page='main'/>
+            <HeaderMenu back={true} title='Корзина'/>
+            <FooterMenu page='cart'/>
             <StatusBar style="auto"/>
         </View>
     )

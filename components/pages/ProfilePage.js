@@ -15,7 +15,7 @@ export const ProfilePage = (props) => {
             width: '100%',
             position: 'relative',
         }}>
-            <HeaderMenu title='Профиль'/>
+            <HeaderMenu back={true} title='Профиль'/>
             <View style={{
                 rowGap: 16,
                 paddingTop: 80,

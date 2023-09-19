@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
-import {AntDesign, Feather, MaterialIcons} from "@expo/vector-icons";
+import {AntDesign, Feather, MaterialCommunityIcons, MaterialIcons} from "@expo/vector-icons";
 
 export const FooterMenu = (props) => {
     const navigation = useNavigation();
@@ -8,21 +8,43 @@ export const FooterMenu = (props) => {
     return (
         <View style={stylesFooterMenu.container}>
             <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Главная страница')}>
-                <AntDesign name="home" size={24} color={props.page === 'main' ? '#1C1C1C':'#CCCCCC'} />
+                <AntDesign name="home" size={24} color={props.page === 'main' ? '#1C1C1C' : '#CCCCCC'} style={{width:24, height:24}}/>
                 <Text style={{
-                    color: props.page === 'main' ? '#1C1C1C':'#CCCCCC'
+                    color: props.page === 'main' ? '#1C1C1C' : '#CCCCCC',
+                    fontSize: 9,
+                    fontWeight: '700'
                 }}>Главная</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Категории')}>
-                <MaterialIcons name="category" size={24} color={props.page === 'categories' ? '#1C1C1C':'#CCCCCC'} />
+            <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Каталог')}>
+                <MaterialIcons name="category" size={24} color={props.page === 'categories' ? '#1C1C1C' : '#CCCCCC'} style={{width:24, height:24}}/>
                 <Text style={{
-                    color: props.page === 'categories' ? '#1C1C1C':'#CCCCCC'
-                }}>Категории</Text>
+                    color: props.page === 'categories' ? '#1C1C1C' : '#CCCCCC',
+                    fontSize: 9,
+                    fontWeight: '700'
+                }}>Каталог</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Корзина')}>
+                <Feather name="shopping-cart" size={24} color={props.page === 'cart' ? '#1C1C1C' : '#CCCCCC'} style={{width:24, height:24}}/>
+                <Text style={{
+                    color: props.page === 'cart' ? '#1C1C1C' : '#CCCCCC',
+                    fontSize: 9,
+                    fontWeight: '700'
+                }}>Корзина</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Избранное')}>
+                <MaterialCommunityIcons name="heart-outline" size={24} color={props.page === 'liked' ? '#1C1C1C' : '#CCCCCC'} style={{width:24, height:24}}/>
+                <Text style={{
+                    color: props.page === 'liked' ? '#1C1C1C' : '#CCCCCC',
+                    fontSize: 9,
+                    fontWeight: '700'
+                }}>Избранное</Text>
             </TouchableOpacity>
             <TouchableOpacity style={stylesFooterMenu.button} onPress={() => navigation.navigate('Профиль')}>
-                <Feather name="user" size={24} color={props.page === 'profile' ? '#1C1C1C':'#CCCCCC'} />
+                <Feather name="user" size={24} color={props.page === 'profile' ? '#1C1C1C' : '#CCCCCC'} style={{width:24, height:24}}/>
                 <Text style={{
-                    color: props.page === 'profile' ? '#1C1C1C':'#CCCCCC'
+                    color: props.page === 'profile' ? '#1C1C1C' : '#CCCCCC',
+                    fontSize: 9,
+                    fontWeight: '700'
                 }}>Профиль</Text>
             </TouchableOpacity>
         </View>)
@@ -42,7 +64,7 @@ const stylesFooterMenu = StyleSheet.create({
         bottom: 0,
         paddingLeft: 24,
         paddingRight: 24,
-        paddingBottom: 24,
+        paddingBottom: 34,
         backgroundColor: 'white',
     },
     button: {

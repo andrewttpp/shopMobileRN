@@ -7,6 +7,8 @@ import {ProductsPage} from "./components/pages/ProductsPage";
 import {ToastProvider} from 'react-native-toast-notifications'
 import React from "react";
 import ProductPage from "./components/pages/ProductPage";
+import {CartPage} from "./components/pages/CartPage";
+import {LikedPage} from "./components/pages/LikedPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +16,7 @@ export default function App() {
     const MyContext = React.createContext();
 
     return (
-        <ToastProvider offsetBottom={80}>
+        <ToastProvider offsetBottom={100}>
             <NavigationContainer>
                 <Stack.Navigator
                     screenOptions={{
@@ -24,13 +26,14 @@ export default function App() {
                     <Stack.Screen
                         name="Главная страница"
                         component={MainPage}
+                        independent
                     />
                     <Stack.Screen
                         name="Товары"
                         component={ProductsPage}
                     />
                     <Stack.Screen
-                        name="Категории"
+                        name="Каталог"
                         component={CategoriesPage}
                     />
                     <Stack.Screen
@@ -40,6 +43,14 @@ export default function App() {
                     <Stack.Screen
                         name="Товар"
                         component={ProductPage}
+                    />
+                    <Stack.Screen
+                        name="Корзина"
+                        component={CartPage}
+                    />
+                    <Stack.Screen
+                        name="Избранное"
+                        component={LikedPage}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

@@ -1,13 +1,15 @@
-import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {ScrollView,  Text, TouchableOpacity, View} from "react-native";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {HeaderMenu} from "../HeaderMenu";
 import {FooterMenu} from "../FooterMenu";
 import {StatusBar} from "expo-status-bar";
 import {MaterialCommunityIcons, Fontisto, Ionicons} from "@expo/vector-icons";
 import {useToast} from "react-native-toast-notifications";
-import {API_CATEGORIES} from "../http/api";
+import {API_CATEGORIES, API_MAIN_URL} from "../http/api";
 import {useNavigation} from "@react-navigation/native";
+import {ImageSliderProducts} from "../AdditionalComponents/ImageSlider";
+import {PaginationPointsProducts, ProductsPageStyle} from "../AdditionalComponents/PaginationPoints";
 
 export const ProductsPage = (props) => {
     const [data, setData] = useState([])
@@ -28,19 +30,32 @@ export const ProductsPage = (props) => {
                 setLiked(newLiked)
 
                 if (liked[props.index]) {
-                    toast.show("Товар успешно удален из избранного", {
-                        type: "normal",
-                        placement: "bottom",
-                        duration: 4000,
-                        animationType: "zoom-in",
-                    });
+                    axios({
+                        method: 'post',
+                        url: `${API_MAIN_URL}/likes/remove/${props.item.id}/`,
+                        withCredentials:true,
+                    }).then((response) => {
+                        toast.show("Товар успешно удален из избранного", {
+                            type: "normal",
+                            placement: "bottom",
+                            duration: 4000,
+                            animationType: "zoom-in",
+                        });
+                    }).catch(error => console.log(error));
+
                 } else {
-                    toast.show("Товар успешно добавлен в избранное", {
-                        type: "normal",
-                        placement: "bottom",
-                        duration: 4000,
-                        animationType: "zoom-in",
-                    });
+                    axios({
+                        method: 'post',
+                        url: `${API_MAIN_URL}/likes/add/${props.item.id}/`,
+                        withCredentials:true,
+                    }).then((response) => {
+                        toast.show("Товар успешно добавлен в избранное", {
+                            type: "normal",
+                            placement: "bottom",
+                            duration: 4000,
+                            animationType: "zoom-in",
+                        });
+                    }).catch(error => console.log(error));
                 }
             }}>
                 <MaterialCommunityIcons
@@ -63,23 +78,39 @@ export const ProductsPage = (props) => {
                 setInCart(newInCart)
 
                 if (inCart[props.index]) {
-                    toast.show("Товар успешно удален из корзины", {
-                        type: "normal",
-                        placement: "bottom",
-                        duration: 4000,
-                        animationType: "zoom-in",
-                    })
+                    axios({
+                        method: 'post',
+                        url: `${API_MAIN_URL}/cart/remove/${props.item.id}/`,
+                        withCredentials:true,
+                    }).then((response) => {
+                        toast.show("Товар успешно удален из корзины", {
+                            type: "normal",
+                            placement: "bottom",
+                            duration: 4000,
+                            animationType: "zoom-in",
+                        })
+                    }).catch(error => console.log(error));
                 } else {
-                    toast.show("Товар успешно добавлен в корзину", {
-                        type: "normal",
-                        placement: "bottom",
-                        duration: 4000,
-                        animationType: "zoom-in",
-                    })
+                    axios({
+                        method: 'post',
+                        data: {
+                            quantity: 1,
+                            price: props.item.price
+                        },
+                        withCredentials:true,
+                        url: `${API_MAIN_URL}/cart/add/${props.item.id}/`,
+                    }).then((response) => {
+                        toast.show("Товар успешно добавлен в корзину", {
+                            type: "normal",
+                            placement: "bottom",
+                            duration: 4000,
+                            animationType: "zoom-in",
+                        })
+                    }).catch(error => console.log(error));
                 }
             }}>
                 <Fontisto
-                    name={inCart[props.index] ? "shopping-basket-remove" : "shopping-basket-add"}
+                    name={inCart[props.index]? "shopping-basket-remove" : "shopping-basket-add"}
                     size={16}
                 />
             </TouchableOpacity>
@@ -89,44 +120,15 @@ export const ProductsPage = (props) => {
     const getProductsInCategory = (category_id) => {
         axios({
             method: 'get',
-
             url: `${API_CATEGORIES}${category_id}/`,
         }).then((response) => {
             setData(response.data)
             if (response.data.length) {
                 setInitial(response.data.length, setPaginator)
-                setInitial(response.data.length, setInCart)
-                setInitialLiked(response.data.length)
+                setInitialCart(response.data)
+                setInitialLiked(response.data)
             }
         }).catch(error => console.log(error));
-    }
-
-    const ImageSlider = (images, productId) => {
-        return (
-            <View>
-                <ScrollView style={{
-                    maxWidth: 150,
-                }} horizontal pagingEnabled showsHorizontalScrollIndicator={false}
-                            scrollEventThrottle={16} snapToInterval={150}
-                            onScroll={(event) => changePaginate(event, productId)}>
-                    {images.map((image, keyId) =>
-                        (
-                            <Image key={keyId} source={{uri: `http://localhost:8000${image.image}`}}
-                                   style={{ height: 100, width: 150, borderRadius: 4, zIndex: -1 }}
-                            />
-                        ))}
-                </ScrollView>
-            </View>
-        );
-    };
-
-    const changePaginate = (event, productIndex) => {
-        const slide = Math.ceil(event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width)
-        if (slide !== pagination[productIndex] && data[productIndex].images[slide]) {
-            const newPagination = [...pagination];
-            newPagination[productIndex] = slide;
-            setPaginator(newPagination);
-        }
     }
 
     const setInitial = (countProducts, setPaginator) => {
@@ -138,13 +140,42 @@ export const ProductsPage = (props) => {
         setPaginator(array)
     }
 
-    const setInitialLiked = (countProducts) => {
-        let liked = []
-        for (let i = 0; i < countProducts; i++) {
-            liked.push(false)
+    const setInitialCart = (data) => {
+        let promises = []
+        for (let i = 0; i < data.length; i++) {
+            promises.push(
+                axios({
+                    method: 'get',
+                    url: `${API_MAIN_URL}/cart/in_cart/${data[i].id}/`,
+                    withCredentials:true,
+                }).then((response) => {
+                    return response.data.in_cart
+                }).catch(error => console.log(error))
+            )
         }
 
-        setLiked(liked)
+        Promise.all(promises).then((inCart) => {
+            setInCart(inCart)
+        })
+    }
+
+    const setInitialLiked = (data) => {
+        let promises = []
+        for (let i = 0; i < data.length; i++) {
+            promises.push(
+                axios({
+                    method: 'get',
+                    url: `${API_MAIN_URL}/likes/is_liked/${data[i].id}/`,
+                    withCredentials:true,
+        }).then((response) => {
+                return response.data.is_liked
+            }).catch(error => console.log(error))
+        )
+        }
+
+        Promise.all(promises).then((liked) => {
+            setLiked(liked)
+        })
     }
 
     useEffect(() => {
@@ -156,7 +187,7 @@ export const ProductsPage = (props) => {
 
     return (
         <View style={ProductsPageStyle.container}>
-            <HeaderMenu title={props.route.params.title}/>
+            <HeaderMenu back={true} title={props.route.params.title}/>
             <ScrollView contentContainerStyle={{
                 rowGap: 16,
                 paddingTop: 110,
@@ -187,22 +218,8 @@ export const ProductsPage = (props) => {
                             product_id: item.id,
                             title: item.name,
                         })}>
-                            {ImageSlider(item.images, index)}
-                            <View style={{
-                                width: '100%',
-                                alignItems: 'center',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center'
-                            }}>
-                                {
-                                    item.images.map((i, k) =>
-                                        (
-                                            <Text key={k}
-                                                  style={pagination[index] === k ? ProductsPageStyle.paginatorActive : ProductsPageStyle.paginator}>∙</Text>
-                                        )
-                                    )}
-                            </View>
+                            {ImageSliderProducts(item.images, index, data, pagination, setPaginator)}
+                            {PaginationPointsProducts(item, pagination, index)}
                             <View style={{
                                 display: 'flex',
                                 paddingLeft: 10,
@@ -217,7 +234,7 @@ export const ProductsPage = (props) => {
                                             justifyContent: 'space-between'
                                         }}>
                                             <View style={{
-                                                backgroundColor: '#000000',
+                                                backgroundColor: '#f01515',
                                                 paddingLeft: 3,
                                                 paddingRight: 3,
                                                 paddingTop: 3,
@@ -231,7 +248,7 @@ export const ProductsPage = (props) => {
                                                     fontWeight: 800
                                                 }}>-{(((item.price - item.promotions.new_price) / item.price) * 100).toFixed(0)}%</Text>
                                             </View>
-                                            <LikeButton index={index}/>
+                                            <LikeButton item={item} index={index}/>
                                         </View>
 
                                         <View style={{
@@ -260,7 +277,7 @@ export const ProductsPage = (props) => {
                                             display: 'flex',
                                             alignItems: 'flex-end'
                                         }}>
-                                            <LikeButton index={index}/>
+                                            <LikeButton item={item} index={index}/>
                                         </View>
                                         <Text style={{
                                             fontSize: 14,
@@ -285,38 +302,59 @@ export const ProductsPage = (props) => {
                                     <View style={{
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        gap: 1
+                                        gap: 2,
+                                        alignItems: 'center'
                                     }}>
                                         <Ionicons
                                             name={"star"}
                                             size={12}
-                                            color={"orange"}
+                                            color={"#afafaf"}
+                                            style={{
+                                                width: 12,
+                                                height: 12
+                                            }}
                                         />
                                         <Ionicons
                                             name={"star"}
                                             size={12}
-                                            color={"orange"}
+                                            color={"#afafaf"}
+                                            style={{
+                                                width: 12,
+                                                height: 12
+                                            }}
                                         />
                                         <Ionicons
                                             name={"star"}
                                             size={12}
-                                            color={"orange"}
+                                            color={"#afafaf"}
+                                            style={{
+                                                width: 12,
+                                                height: 12
+                                            }}
                                         />
                                         <Ionicons
                                             name={"star"}
                                             size={12}
-                                            color={"orange"}
+                                            color={"#afafaf"}
+                                            style={{
+                                                width: 12,
+                                                height: 12
+                                            }}
                                         />
                                         <Ionicons
                                             name={"star"}
                                             size={12}
-                                            color={"orange"}
+                                            color={"#afafaf"}
+                                            style={{
+                                                width: 12,
+                                                height: 12
+                                            }}
                                         />
                                         <Text style={{
                                             fontSize: 12
                                         }}>(0)</Text>
                                     </View>
-                                    <ToggleCartButton index={index}/>
+                                    <ToggleCartButton item={item} index={index}/>
                                 </View>
 
                             </View>
@@ -330,21 +368,4 @@ export const ProductsPage = (props) => {
         </View>
     )
 }
-
-export const ProductsPageStyle = StyleSheet.create({
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        position: 'relative',
-    },
-    paginatorActive: {
-        color: 'black',
-    },
-    paginator: {
-        color: '#cbc7c7',
-    },
-
-});
 

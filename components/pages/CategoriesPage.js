@@ -32,11 +32,11 @@ export const CategoriesPage = (props) => {
             width: '100%',
             position: 'relative',
         }}>
-            <HeaderMenu title='Категории'/>
+            <HeaderMenu back={true} title='Каталог'/>
             <ScrollView contentContainerStyle={{
                 rowGap: 16,
                 paddingTop: 120,
-                paddingBottom: 70,
+                paddingBottom: 110,
                 alignItems: 'center',
             }} style={{
                 height: '100%',
